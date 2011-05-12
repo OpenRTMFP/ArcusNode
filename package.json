@@ -1,0 +1,36 @@
+{
+  "name": "ArcusNode", 
+  "version": "0.0.2", 
+  "author": "arcusdev <arcus.node@gmail.com>", 
+  "description": "A RTMFP Rendevouz Server For Peer Assisted Networking With Adobe Flash", 
+  "main": "service", 
+  "keywords":[
+    "rtmfp", 
+    "flash", 
+    "p2p", 
+    "networking", 
+    "rendezvouz", 
+    "rtmp"
+  ], 
+  "directories": {
+    "lib": "./lib"
+  }, 
+  "maintainers": [{
+    "name":"arcusdev", 
+    "email":"arcus.node@gmail.com", 
+    "web":"http://github.com/OpenRTMFP"
+  }], 
+  "licenses": [{
+    "type": "GPL", 
+    "url": "http://www.gnu.org/licenses/"
+  }], 
+  "repositories": [{
+    "type": "git"
+  , "url" : "http://github.com/OpenRTMFP/ArcusNode.git"
+  }], 
+  "scripts" : { 
+    "preinstall" : "node-waf configure", 
+    "install" : "node-waf build", 
+    "test" : "node test.js"
+  }
+}
