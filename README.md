@@ -10,6 +10,8 @@ ArcusNode is an offspring of [Cumulus](http://github.com/OpenRTMFP/Cumulus), a s
 ## Installation
 To use ArcusNode as a service, get it from [github](http://github.com/OpenRTMFP/ArcusNode) and run:
 <pre>
+$> git submodule init
+$> git submodule update
 $> node-waf configure build
 $> node service.js
 </pre>
