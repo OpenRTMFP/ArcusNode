@@ -31,12 +31,14 @@ ArcusNode already takes a settings object in the constructor, through which late
 
 ## Roadmap
 To reach version 0.1:
+
 * Add command line arguments
 * Stabilize the rendezvouz part
-* Implement management cycle 
+* Implement management cycle
 * Add user authentication through a callback method, given to ArcusNode as a setting
 * Add support for RPCs which can be extended easily with javascript functions
 * Add testing scripts and a Flash testing project
+* Add AMF0 reading and writing
 
 ## Development
 If you have ideas, suggestions, bugfixes or just want to yell a little at the author,
