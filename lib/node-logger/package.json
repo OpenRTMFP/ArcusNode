@@ -1,0 +1,17 @@
+{ "name"         : "node-logger"
+, "version"      : "1.0.0"
+, "description"  : "Command line argument parser written in the style of commonjs. To be used with node.js."
+, "author"       : "Aaron Quint <aaron@quirkey.com>"
+, "contributors" : [
+    "David Sommers <databyte@gmail.com>"
+  ]
+, "repository"   : {
+    "type" : "git",
+    "url"  : "http://github.com/databyte/node-logger.git"
+  }
+, "main"         : "./lib/logger"
+, "engines"      : { "node" : ">=0.1.90" }
+, "scripts"      : {}
+, "dependencies" : {}
+}
+
