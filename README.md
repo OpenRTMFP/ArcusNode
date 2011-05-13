@@ -15,9 +15,13 @@ $> git submodule update
 $> node-waf configure build
 $> node service.js
 </pre>
-You then should see:
+You then should see something like:
 <pre>
-Starting up ArcusNode RTMFP Service
+Starting up ArcusNode RTMFP Service.
+Copyright (C) 2011 OpenRTMFP
+This program comes with ABSOLUTELY NO WARRANTY.
+This is free software, and you are welcome to redistribute it under certain conditions.
+(For usage help type "node service.js -h")
 ArcusNode RTMFP Service running at port 1935
 </pre>
 1935 is the default port for RTMFP communication.
