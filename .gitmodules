@@ -1,3 +1,0 @@
-[submodule "lib/node-logger"]
-	path = lib/node-logger
-	url = git://github.com/herrlinger/node-logger.git
