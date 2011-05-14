@@ -31,6 +31,11 @@ process.argv.forEach(function (val, index, array) {
   switch(valArr[0]){
     case 'logLevel':
         settings.logLevel = valArr[1];
+        util.print('Setting logLevel to ' + valArr[1] + '\n');
+      break;
+    case 'logFile':
+        settings.logFile = valArr[1];
+        util.print('Setting logFile to ' + valArr[1] + '\n');
       break;
     case '-h':
     case '-help':
@@ -39,6 +44,7 @@ process.argv.forEach(function (val, index, array) {
           'node service.js [argument1 argument2 ...]\n\n' +
           'Arguments:\n' +
           'logLevel=[level]            [level] can be one of: fatal, error, warn, info, debug' +
+          'logFile=[path]              [path] The path to a file to log output to' +
           '\n\n'
         );
         process.exit();
