@@ -29,9 +29,13 @@ def set_options(opt):
 def configure(conf):
   conf.check_tool('compiler_cxx')
   conf.check_tool('node_addon')
- 
+  
 def build(bld):
   rtmfp = bld.new_task_gen('cxx', 'shlib', 'node_addon')
+  
+  if sys.platform.startswith("cygwin"):
+    rtmfp.lib = 'crypto';
+  
   rtmfp.cxxflags = ["-g", "-D_FILE_OFFSET_BITS=64", "-D_LARGEFILE_SOURCE", "-Wall", "-L/usr/lib", "-lssl"]
   rtmfp.chmod = 0755
   rtmfp.target = 'rtmfp'

@@ -7,7 +7,7 @@ License: [GPL](http://www.gnu.org/licenses/)
 ## Description
 ArcusNode is an offspring of [Cumulus](http://github.com/OpenRTMFP/Cumulus), a standalone C++ implementation of the _RTMFP Protocol_ and much more. ArcusNode aims to assist P2P networking with ease of extendability due to Javascript glue.
 
-## Installation
+## Build & Installation
 To use ArcusNode as a service, get it from [github](http://github.com/OpenRTMFP/ArcusNode) and run:
 <pre>
 $> git submodule init
@@ -25,6 +25,10 @@ This is free software, and you are welcome to redistribute it under certain cond
 ArcusNode RTMFP Service running at port 1935
 </pre>
 1935 is the default port for RTMFP communication.
+
+#### Cygwin
+If you run intro problems building node on Cygwin, checkout [the node wiki](https://github.com/joyent/node/wiki/Building-node.js-on-Cygwin-(Windows)).
+If you consider using rebase, use both _./rebaseall_ and _./perlrebase_.
 
 ## Usage
 As you can see in the service.js, it is very easy to use ArcusNode in your own project.
