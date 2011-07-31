@@ -310,18 +310,17 @@ class RTMFP: ObjectWrap
       HandleScope scope;
       
       Local<Object> pkt_obj = args[0]->ToObject();
-      Local<Object> key_obj = args[1]->ToObject();
+      size_t pkt_length = args[1]->Uint32Value();
+      Local<Object> key_obj = args[2]->ToObject();
       
-      if (args.Length() < 1 || !Buffer::HasInstance(pkt_obj) || !Buffer::HasInstance(key_obj)) {
+      if (args.Length() < 1 || !Buffer::HasInstance(pkt_obj) || !Buffer::HasInstance(key_obj) || pkt_length <= 0) {
         return ThrowException(Exception::TypeError(String::New("Bad argument")));
       }
       
       char *pkt_data = Buffer::Data(pkt_obj);
-      size_t pkt_length = Buffer::Length(pkt_obj);
-      
       char *key_data = Buffer::Data(key_obj);
       
-      uint32_t offset = args[2]->IsUndefined() ? uint32_t(0) : args[2]->Uint32Value();
+      uint32_t offset = args[3]->IsUndefined() ? uint32_t(0) : args[3]->Uint32Value();
       
       AES_KEY aes_encrypt_key;
       AES_set_encrypt_key((const uint8_t*)key_data, 128, &aes_encrypt_key);
