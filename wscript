@@ -17,7 +17,7 @@
 #
 # This file is a part of ArcusNode.
  
-import os
+import os, sys
 
 srcdir = '.'
 blddir = './build'
