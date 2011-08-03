@@ -217,7 +217,6 @@ class RTMFP: ObjectWrap
       HandleScope scope;
       
       Local<Object> buf_obj = args[0]->ToObject();
-      Local<Object> pos_obj = args[1]->ToObject();
       
       if (args.Length() < 1 || !Buffer::HasInstance(buf_obj)) {
         return ThrowException(Exception::TypeError(String::New("Bad argument")));
@@ -232,13 +231,13 @@ class RTMFP: ObjectWrap
 
       a = buf_data[pos];
       if (a & 0x80) {
-        b = buf_data[pos + 1];
+        b = buf_data[++pos];
         ++s;
         if (b & 0x80) {
-          c = buf_data[pos + 1];
+          c = buf_data[++pos];
           ++s;
           if (c & 0x80) {
-            d = buf_data[pos + 1];
+            d = buf_data[++pos];
             ++s;
           }
         }
