@@ -14,7 +14,8 @@
     "RPC"
   ], 
   "directories": {
-    "lib": "./lib"
+    "lib": "./lib",
+    "src": "./src"
   }, 
   "maintainers": [{
     "name":"arcusdev", 
