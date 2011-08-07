@@ -21,7 +21,12 @@
     "name":"arcusdev", 
     "email":"arcus.node@gmail.com", 
     "web":"http://github.com/OpenRTMFP"
-  }], 
+  }],
+  "bugs" : { 
+    "mail" : "arcus.node@gmail.com", 
+    "web" : "https://github.com/OpenRTMFP/ArcusNode/issues"
+  },
+  "engines" : { "node" : "0.5.2", "npm" : "1" },
   "licenses": [{
     "type": "GPL", 
     "url": "http://www.gnu.org/licenses/"
@@ -30,8 +35,9 @@
     "type": "git"
   , "url" : "http://github.com/OpenRTMFP/ArcusNode.git"
   }], 
+  "bundleDependencies" : [ "node-logger" ],
   "scripts" : { 
-    "preinstall" : "./configure", 
+    "preinstall" : "", 
     "install" : "node-waf configure build", 
     "test" : "node test.js",
     "start" : "node service.js"
