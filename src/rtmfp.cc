@@ -76,7 +76,7 @@ class RTMFP: ObjectWrap
         NODE_SET_PROTOTYPE_METHOD(s_ct, "encryptBuffer", encryptBuffer);
         NODE_SET_PROTOTYPE_METHOD(s_ct, "finishChecksum", finishChecksum);
         NODE_SET_PROTOTYPE_METHOD(s_ct, "paddingLength", paddingLength);
-        NODE_SET_PROTOTYPE_METHOD(s_ct, "read7BitValue", read7BitValue);
+        NODE_SET_PROTOTYPE_METHOD(s_ct, "readU29", readU29);
         NODE_SET_PROTOTYPE_METHOD(s_ct, "computePeerId", computePeerId);
         NODE_SET_PROTOTYPE_METHOD(s_ct, "computeAsymetricKeys", computeAsymetricKeys);
         
@@ -211,9 +211,9 @@ class RTMFP: ObjectWrap
     }
     
     /**
-     * Reads a 7-bit encoded integer from a Buffer
+     * Reads a U29 encoded integer from a Buffer
      */     
-    static Handle<Value> read7BitValue(const Arguments& args) {
+    static Handle<Value> readU29(const Arguments& args) {
       HandleScope scope;
       
       Local<Object> buf_obj = args[0]->ToObject();
