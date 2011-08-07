@@ -27,28 +27,72 @@ ArcusNode RTMFP Service running at port 1935
 1935 is the default port for RTMFP communication.
 
 #### Cygwin
-If you run intro problems building node on Cygwin, checkout [the node wiki](https://github.com/joyent/node/wiki/Building-node.js-on-Cygwin-(Windows)).
+If you run intro problems building node on Cygwin, checkout _https://github.com/joyent/node/wiki/Building-node.js-on-Cygwin-(Windows)_.
 If you consider using rebase, use both _./rebaseall_ and _./perlrebase_.
 
 ## Usage
+### Basic
 As you can see in the service.js, it is very easy to use ArcusNode in your own project.
 <pre>
 var ArcusNode = require('./lib/arcus_node.js');
 var arcusService = new ArcusNode();
 arcusService.run();
 </pre>
-ArcusNode already takes a settings object in the constructor, through which later on many customization will be possible, like specifying an authentication callback which gets a username/id and password (can also be a session id), so you can do use your own authentication implementation easily.
+ArcusNode already takes a settings object in the constructor, through which later on many customization will be possible.
+
+### Events
+
+At this moment, ArcusNode fires the following (async) events:
+
+* CONNECT
+* MESSAGE
+
+ArcusNode provides two methods to add event listeners, <pre>on(type, listener [, context])</pre> and <pre>addListener(type, listener [, context])</pre>,
+which both behave the same. The optional _context_ will be used to call the _listener_ in, if not given the _listener_ is called in _ArcusNode context_.
+All listeners get passed one argument, an _ArcusEvent_ object. 
+The _ArcusEvent_ object provides the following attributes and methods:
+
+* type() - Returns a string with the type of the Event (connect, message, ...)
+* arcus() - Returns the ArcusNode instance that dispatched the event
+* nc() - If given, returns the NetConnection related to the event, otherwise _null_
+* data - An _Object_ or an _Array_ with event related data (AMF data from a message as Array)
+* finish(data) - If the listener is done doing its thing, this must be called to finish the event
+
+#### ArcusEvent.finish()
+The _finish()_ method resumes protocol communication after a listener is done.
+The CONNECT event for example is triggered when a connection request is coming in. Then the request is acknowledged to the client immediately,
+but the answer for the request is only sent, after the _finish()_ method was called by the listener. The _finish()_ method can only be called once for an Event.
+If there is more than one listener for an event, the user is responsible for calling _finish()_ only once.
+The _data_ argument passed to the _finish()_ method can in a message event for example be an object that is returned to client.
+
+Example for a connect event listener with user authentication:
+<pre>
+var ArcusNode = require('./lib/arcus_node.js');
+var arcusService = new ArcusNode({ auth: true });
+
+arcusService.on('connect', function(evt){
+  //If a NetConnection.connect() from the client provided additional arguments, they will be in evt.data Array from index 1
+  //NetConnection.connect(ARCUSNODE_URL, 'username', 'password'); -> evt.data[1] == 'username' && evt.data[2] == 'password'
+  if(checkAuth(evt.data[1], evt.data[2])) {
+    evt.nc().authenticated(true);
+  }
+  evt.finish();
+});
+
+arcusService.run();
+</pre>
+
 
 ## Roadmap
 To reach version 0.1:
 
 * Add command line arguments
 * Stabilize the rendezvouz part
-* Implement management cycle
-* Add user authentication through a callback method, given to ArcusNode as a setting
-* Add support for RPCs which can be extended easily with javascript functions
+* _Implement management cycle (done)_
+* _Add user authentication through a callback method (done)_
+* _Add support for RPCs which can be extended easily with javascript functions (done)_
 * Add testing scripts and a Flash testing project
-* Add AMF0 reading and writing
+* Add AMF0/AMF3 reading and writing (!)
 
 ## Development
 If you have ideas, suggestions, bugfixes or just want to yell a little at the author,
