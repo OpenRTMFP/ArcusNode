@@ -44,6 +44,7 @@ ArcusNode already takes a settings object in the constructor, through which late
 
 At this moment, ArcusNode fires the following (async) events:
 
+* HANDSHAKE
 * CONNECT
 * DISCONNECT
 * MESSAGE
@@ -58,6 +59,7 @@ The _ArcusEvent_ object provides the following attributes and methods:
 * nc() - If given, returns the NetConnection related to the event, otherwise _undefined_
 * request() - If given, return the request object related to the event, otherwise _undefined_
 * time() - The timestamp of the event creation
+* command - A String with the name of the remote procedure that was called in a MESSAGE event
 * data - An _Object_ or an _Array_ with event related data (AMF data from a message as Array)
 * finish(data) - If the listener is done doing its thing, this must be called to finish the event
 
@@ -114,6 +116,9 @@ arcusService.on(ArcusEvent.MESSAGE, function(evt){
 
 **CONNECT & DISCONNECT**
 These two events do not react on any argument given to _finish_.
+
+**HANDSHAKE**
+Can be stopped by explicitly giving _finish_ a boolean _false_.
 
 ### ArcusNode Settings
 
