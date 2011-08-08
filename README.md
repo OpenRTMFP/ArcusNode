@@ -1,11 +1,11 @@
 # ArcusNode
-#### A RTMFP Rendevouz Server For Peer Assisted Networking With Adobe Flash
+#### A RTMFP Rendevouz Server For Peer Assisted Networking With Adobe Flash on nodejs
 
 Author: arcusdev [arcus.node@gmail.com]
 License: [GPL](http://www.gnu.org/licenses/) 
 
 ## Description
-ArcusNode is an offspring of [Cumulus](http://github.com/OpenRTMFP/Cumulus), a standalone C++ implementation of the _RTMFP Protocol_ and much more. ArcusNode aims to assist P2P networking with ease of extendability due to Javascript glue.
+ArcusNode is an offspring of [Cumulus](http://github.com/OpenRTMFP/Cumulus), a standalone C++ implementation of the _RTMFP Protocol_ and much more. ArcusNode aims to assist P2P networking with ease of extendability due to Javascript glue with nodejs.
 
 ## Build & Installation
 To use ArcusNode as a service, get it from [github](http://github.com/OpenRTMFP/ArcusNode) and run:
