@@ -57,6 +57,7 @@ The _ArcusEvent_ object provides the following attributes and methods:
 * arcus() - Returns the ArcusNode instance that dispatched the event
 * nc() - If given, returns the NetConnection related to the event, otherwise _undefined_
 * request() - If given, return the request object related to the event, otherwise _undefined_
+* time() - The timestamp of the event creation
 * data - An _Object_ or an _Array_ with event related data (AMF data from a message as Array)
 * finish(data) - If the listener is done doing its thing, this must be called to finish the event
 
@@ -79,12 +80,40 @@ arcusService.run();
 </pre>
 
 #### ArcusEvent.finish()
-The _finish()_ method resumes protocol communication after a listener is done.
+The _finish_ method resumes protocol communication after a listener is done.
 The CONNECT event for example is triggered when a connection request is coming in. Then the request is acknowledged to the client immediately,
-but the answer for the request is only sent, after the _finish()_ method was called by the listener. The _finish()_ method can only be called once for an Event.
-If there is more than one listener for an event, the user is responsible for calling _finish()_ only once.
-The _data_ argument passed to the _finish()_ method can in a message event for example be an object that is returned to client.
+but the answer for the request is only sent, after the _finish_ method was called by the listener. The _finish_ method can only be called once for an Event.
+If there is more than one listener for an event, the user is responsible for calling _finish_ only once.
 
+The arguments the _finish()_ method takes depends on the event type:
+
+**MESSAGE**
+In the case of a message event, the _finish_ method needs at least one argument,
+otherwise the client will get an error result. An error result can be returned explicitly by giving the _finish_ method a boolean _false_ as first argument.
+In the case of explicit failure, a second argument can be a string description of the error, which will be sent to the client in the _Responder_ status object.
+If _finish_ gets anything else, it is sent to the client as Responder result object.
+
+Example Client side:
+<pre>
+var responder:Responder = new Responder(function(response) {
+  trace(response.what); //-> 'ArcusNode rocks!'
+});
+connection.call('sayWhat', responder, { name: 'ArcusNode' });
+</pre>
+
+Example Server side:
+<pre>
+arcusService.on(ArcusEvent.MESSAGE, function(evt){
+  if(evt.command == 'sayWhat') {
+    evt.finish({ what: evt.data[0].name + ' rocks!' });
+    return;
+  }
+  evt.finish();
+});
+</pre>
+
+**CONNECT & DISCONNECT**
+These two events do not react on any argument given to _finish_.
 
 ### ArcusNode Settings
 
