@@ -45,6 +45,7 @@ ArcusNode already takes a settings object in the constructor, through which late
 At this moment, ArcusNode fires the following (async) events:
 
 * CONNECT
+* DISCONNECT
 * MESSAGE
 
 ArcusNode provides two methods to add event listeners, <pre>on(type, listener [, context])</pre> and <pre>addListener(type, listener [, context])</pre>,
@@ -54,23 +55,18 @@ The _ArcusEvent_ object provides the following attributes and methods:
 
 * type() - Returns a string with the type of the Event (connect, message, ...)
 * arcus() - Returns the ArcusNode instance that dispatched the event
-* nc() - If given, returns the NetConnection related to the event, otherwise _null_
+* nc() - If given, returns the NetConnection related to the event, otherwise _undefined_
+* request() - If given, return the request object related to the event, otherwise _undefined_
 * data - An _Object_ or an _Array_ with event related data (AMF data from a message as Array)
 * finish(data) - If the listener is done doing its thing, this must be called to finish the event
-
-#### ArcusEvent.finish()
-The _finish()_ method resumes protocol communication after a listener is done.
-The CONNECT event for example is triggered when a connection request is coming in. Then the request is acknowledged to the client immediately,
-but the answer for the request is only sent, after the _finish()_ method was called by the listener. The _finish()_ method can only be called once for an Event.
-If there is more than one listener for an event, the user is responsible for calling _finish()_ only once.
-The _data_ argument passed to the _finish()_ method can in a message event for example be an object that is returned to client.
 
 Example for a connect event listener with user authentication:
 <pre>
 var ArcusNode = require('./lib/arcus_node.js');
+var ArcusEvent = require('./lib/events.js');
 var arcusService = new ArcusNode({ auth: true });
 
-arcusService.on('connect', function(evt){
+arcusService.on(ArcusEvent.CONNECT, function(evt){
   //If a NetConnection.connect() from the client provided additional arguments, they will be in evt.data Array from index 1
   //NetConnection.connect(ARCUSNODE_URL, 'username', 'password'); -> evt.data[1] == 'username' && evt.data[2] == 'password'
   if(checkAuth(evt.data[1], evt.data[2])) {
@@ -82,6 +78,70 @@ arcusService.on('connect', function(evt){
 arcusService.run();
 </pre>
 
+#### ArcusEvent.finish()
+The _finish()_ method resumes protocol communication after a listener is done.
+The CONNECT event for example is triggered when a connection request is coming in. Then the request is acknowledged to the client immediately,
+but the answer for the request is only sent, after the _finish()_ method was called by the listener. The _finish()_ method can only be called once for an Event.
+If there is more than one listener for an event, the user is responsible for calling _finish()_ only once.
+The _data_ argument passed to the _finish()_ method can in a message event for example be an object that is returned to client.
+
+
+### ArcusNode Settings
+
+The ArcusNode constructor takes a settings object with the following attributes:
+
+<pre>
+.auth 
+  Type: Boolean 
+  Default: false 
+  If set to true, only authenticated NetConnections are allowed, others get disconnected.
+  
+.port
+  Type: Integer
+  Default: 1935
+  The port that ArcusNode will listen for UDP connections.
+  
+.address
+  Type: String
+  Default: ''
+  ArcusNode can be run on a specific interface if wanted.
+  
+.logLevel
+  Type: String
+  Default: 'warn'
+  Can be one of ['fatal', 'error', 'warn', 'info', 'debug'].
+  
+logFile:
+  Type: String, path
+  Default: ''
+  If a path for a log file is specified, all logging will be written to that file.
+
+.manageInterval 
+  Type: Integer, seconds 
+  default: 60 
+  The interval for the management cycle to do cleanup
+
+.connectionTimeout 
+  Type: Integer, milliseconds 
+  Default: 120000 
+  The timeout for a NetConnection. The connections is dropped after the NetConnection was unused for that amount of time. 
+
+.groupTimeout
+  Type: Integer, milliseconds
+  Default: 360000
+  The timeout for a NetGroup. The group is dropped afer there was no interaction for that amount of time.
+
+.P2SKeepalive
+  Type: Integer, milliseconds
+  Default: 60000
+  The timeout before the server sends a keepalive message to the client.
+  Should be less then connectionTimeout.
+
+.maxP2SKeepalive
+  Type: Integer
+  Default: 3
+  How often to max keepalive the connection before dropping it.
+</pre>
 
 ## Roadmap
 To reach version 0.1:
