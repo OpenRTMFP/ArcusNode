@@ -47,20 +47,20 @@ At this moment, ArcusNode fires the following (async) events:
 * HANDSHAKE
 * CONNECT
 * DISCONNECT
-* MESSAGE
+* COMMAND
 
 ArcusNode provides two methods to add event listeners, <pre>on(type, listener [, context])</pre> and <pre>addListener(type, listener [, context])</pre>,
 which both behave the same. The optional _context_ will be used to call the _listener_ in, if not given the _listener_ is called in _ArcusNode context_.
 All listeners get passed one argument, an _ArcusEvent_ object. 
 The _ArcusEvent_ object provides the following attributes and methods:
 
-* type() - Returns a string with the type of the Event (connect, message, ...)
+* type() - Returns a string with the type of the Event (connect, command, ...)
 * arcus() - Returns the ArcusNode instance that dispatched the event
 * nc() - If given, returns the NetConnection related to the event, otherwise _undefined_
 * request() - If given, return the request object related to the event, otherwise _undefined_
 * time() - The timestamp of the event creation
-* command - A String with the name of the remote procedure that was called in a MESSAGE event
-* data - An _Object_ or an _Array_ with event related data (AMF data from a message as Array)
+* command - A String with the name of the remote procedure that was called in a COMMAND event
+* data - An _Object_ or an _Array_ with event related data (AMF data from a command as Array)
 * finish(data) - If the listener is done doing its thing, this must be called to finish the event
 
 Example for a connect event listener with user authentication:
@@ -89,8 +89,8 @@ If there is more than one listener for an event, the user is responsible for cal
 
 The arguments the _finish()_ method takes depends on the event type:
 
-**MESSAGE**
-In the case of a message event, the _finish_ method needs at least one argument,
+**COMMAND**
+In the case of a command event, the _finish_ method needs at least one argument,
 otherwise the client will get an error result. An error result can be returned explicitly by giving the _finish_ method a boolean _false_ as first argument.
 In the case of explicit failure, a second argument can be a string description of the error, which will be sent to the client in the _Responder_ status object.
 If _finish_ gets anything else, it is sent to the client as Responder result object.
@@ -105,7 +105,7 @@ connection.call('sayWhat', responder, { name: 'ArcusNode' });
 
 Example Server side:
 <pre>
-arcusService.on(ArcusEvent.MESSAGE, function(evt){
+arcusService.on(ArcusEvent.COMMAND, function(evt){
   if(evt.command == 'sayWhat') {
     evt.finish({ what: evt.data[0].name + ' rocks!' });
     return;
@@ -168,7 +168,7 @@ logFile:
 .P2SKeepalive
   Type: Integer, milliseconds
   Default: 60000
-  The timeout before the server sends a keepalive message to the client.
+  The timeout before the server sends a keepalive command to the client.
   Should be less then connectionTimeout.
 
 .maxP2SKeepalive
