@@ -57,7 +57,7 @@ The _ArcusEvent_ object provides the following attributes and methods:
 * type() - Returns a string with the type of the Event (connect, command, ...)
 * arcus() - Returns the ArcusNode instance that dispatched the event
 * nc() - If given, returns the NetConnection related to the event, otherwise _undefined_
-* request() - If given, return the request object related to the event, otherwise _undefined_
+* message() - If given, return the message object related to the event, otherwise _undefined_
 * time() - The timestamp of the event creation
 * command - A String with the name of the remote procedure that was called in a COMMAND event
 * data - An _Object_ or an _Array_ with event related data (AMF data from a command as Array)
@@ -83,8 +83,8 @@ arcusService.run();
 
 #### ArcusEvent.finish()
 The _finish_ method resumes protocol communication after a listener is done.
-The CONNECT event for example is triggered when a connection request is coming in. Then the request is acknowledged to the client immediately,
-but the answer for the request is only sent, after the _finish_ method was called by the listener. The _finish_ method can only be called once for an Event.
+The CONNECT event for example is triggered when a connection message is coming in. Then the message is acknowledged to the client immediately,
+but the answer for the message is only sent, after the _finish_ method was called by the listener. The _finish_ method can only be called once for an Event.
 If there is more than one listener for an event, the user is responsible for calling _finish_ only once.
 
 The arguments the _finish()_ method takes depends on the event type:
