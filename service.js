@@ -55,5 +55,16 @@ process.argv.forEach(function (val, index, array) {
   }
 });
 
-var arcusService = new ArcusNode(settings); 
-arcusService.run();
+//Startup
+util.print(
+  'Starting up ArcusNode RTMFP Service.\nCopyright (C) 2011 OpenRTMFP \n' +
+  'This program comes with ABSOLUTELY NO WARRANTY.\n' +
+  'This is free software, and you are welcome to redistribute it under certain conditions.\n' +
+  '(For usage help type "node service.js -h")\n'
+);
+
+var arc = new ArcusNode(settings);
+arc.run();
+
+util.print('ArcusNode RTMFP Service running at ' + arc.address().address + ((arc.address().port != '') ? ':' + arc.address().port : ''));
+    
