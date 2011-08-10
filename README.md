@@ -22,12 +22,12 @@ Copyright (C) 2011 OpenRTMFP
 This program comes with ABSOLUTELY NO WARRANTY.
 This is free software, and you are welcome to redistribute it under certain conditions.
 (For usage help type "node service.js -h")
-ArcusNode RTMFP Service running at port 1935
+ArcusNode RTMFP Service running at 0.0.0.0:1935
 </pre>
 1935 is the default port for RTMFP communication.
 
 #### Cygwin
-If you run intro problems building node on Cygwin, checkout _https://github.com/joyent/node/wiki/Building-node.js-on-Cygwin-(Windows)_.
+If you run into problems building node on Cygwin, checkout _https://github.com/joyent/node/wiki/Building-node.js-on-Cygwin-(Windows)_.
 If you consider using rebase, use both _./rebaseall_ and _./perlrebase_.
 
 ## Usage
@@ -38,64 +38,41 @@ var ArcusNode = require('./lib/arcus_node.js');
 var arcusService = new ArcusNode();
 arcusService.run();
 </pre>
-ArcusNode already takes a settings object in the constructor, through which later on many customization will be possible.
+
+### Customization
+ArcusNode uses a mixture of Events, Hooks, and registered command callbacks. Events behave like known Node core events.
+The Hooks can control the protocol flow and directly influence the outcome. Commands are called by a connected client through its NetConnection#call
+and can be registered on ArcusNode. Commands on the server behave almost exactly the same as described in the Flash Documentation,
+except that ArcusNode command callbacks always get the NetConnection which called the command as first argument, then the arguments from the Client. 
 
 ### Events
 
-At this moment, ArcusNode fires the following (async) events:
+At this moment, ArcusNode emits the following events:
 
-* HANDSHAKE
-* CONNECT
-* DISCONNECT
-* COMMAND
+* handshake
+* connect
+* disconnect
+* command
 
-ArcusNode provides two methods to add event listeners, <pre>on(type, listener [, context])</pre> and <pre>addListener(type, listener [, context])</pre>,
-which both behave the same. The optional _context_ will be used to call the _listener_ in, if not given the _listener_ is called in _ArcusNode context_.
-All listeners get passed one argument, an _ArcusEvent_ object. 
-The _ArcusEvent_ object provides the following attributes and methods:
+ArcusNode uses the Node [EventEmitter](http://nodejs.org/docs/v0.5.3/api/events.html#events.EventEmitter) API
 
-* type() - Returns a string with the type of the Event (connect, command, ...)
-* arcus() - Returns the ArcusNode instance that dispatched the event
-* nc() - If given, returns the NetConnection related to the event, otherwise _undefined_
-* message() - If given, return the message object related to the event, otherwise _undefined_
-* time() - The timestamp of the event creation
-* command - A String with the name of the remote procedure that was called in a COMMAND event
-* data - An _Object_ or an _Array_ with event related data (AMF data from a command as Array)
-* finish(data) - If the listener is done doing its thing, this must be called to finish the event
-
-Example for a connect event listener with user authentication:
+Example for a connect event listener:
 <pre>
 var ArcusNode = require('./lib/arcus_node.js');
-var ArcusEvent = require('./lib/events.js');
-var arcusService = new ArcusNode({ auth: true });
+var arcusService = new ArcusNode();
 
-arcusService.on(ArcusEvent.CONNECT, function(evt){
-  //If a NetConnection.connect() from the client provided additional arguments, they will be in evt.data Array from index 1
-  //NetConnection.connect(ARCUSNODE_URL, 'username', 'password'); -> evt.data[1] == 'username' && evt.data[2] == 'password'
-  if(checkAuth(evt.data[1], evt.data[2])) {
-    evt.nc().authenticated(true);
-  }
-  evt.finish();
+arcusService.on('connect', function(nc, obj){
+  console.log('Received a connection request for Connection ' + nc.id() + ' with the properties', obj);
 });
 
 arcusService.run();
 </pre>
 
-#### ArcusEvent.finish()
-The _finish_ method resumes protocol communication after a listener is done.
-The CONNECT event for example is triggered when a connection message is coming in. Then the message is acknowledged to the client immediately,
-but the answer for the message is only sent, after the _finish_ method was called by the listener. The _finish_ method can only be called once for an Event.
-If there is more than one listener for an event, the user is responsible for calling _finish_ only once.
 
-The arguments the _finish()_ method takes depends on the event type:
+### Commands
+[todo]
 
-**COMMAND**
-In the case of a command event, the _finish_ method needs at least one argument,
-otherwise the client will get an error result. An error result can be returned explicitly by giving the _finish_ method a boolean _false_ as first argument.
-In the case of explicit failure, a second argument can be a string description of the error, which will be sent to the client in the _Responder_ status object.
-If _finish_ gets anything else, it is sent to the client as Responder result object.
-
-Example Client side:
+Example for a command Client side:
 <pre>
 var responder:Responder = new Responder(function(response) {
   trace(response.what); //-> 'ArcusNode rocks!'
@@ -103,22 +80,15 @@ var responder:Responder = new Responder(function(response) {
 connection.call('sayWhat', responder, { name: 'ArcusNode' });
 </pre>
 
-Example Server side:
+Example for a command Server side:
 <pre>
-arcusService.on(ArcusEvent.COMMAND, function(evt){
-  if(evt.command == 'sayWhat') {
-    evt.finish({ what: evt.data[0].name + ' rocks!' });
-    return;
-  }
-  evt.finish();
+arcusService.onCommand('sayWhat', function(nc, obj){
+  return { what: obj.name + ' rocks!' };
 });
 </pre>
 
-**CONNECT & DISCONNECT**
-These two events do not react on any argument given to _finish_.
-
-**HANDSHAKE**
-Can be stopped by explicitly giving _finish_ a boolean _false_.
+### Hooks
+[todo]
 
 ### ArcusNode Settings
 
@@ -180,13 +150,8 @@ logFile:
 ## Roadmap
 To reach version 0.1:
 
-* Add command line arguments
-* Stabilize the rendezvouz part
-* _Implement management cycle (done)_
-* _Add user authentication through a callback method (done)_
-* _Add support for RPCs which can be extended easily with javascript functions (done)_
 * Add testing scripts and a Flash testing project
-* Add AMF0/AMF3 reading and writing (!)
+* Complete AMF reading/writing (70%)
 
 ## Development
 If you have ideas, suggestions, bugfixes or just want to yell a little at the author,
