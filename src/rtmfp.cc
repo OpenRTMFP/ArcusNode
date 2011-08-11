@@ -79,6 +79,7 @@ class RTMFP: ObjectWrap
         NODE_SET_PROTOTYPE_METHOD(s_ct, "readU29", readU29);
         NODE_SET_PROTOTYPE_METHOD(s_ct, "computePeerId", computePeerId);
         NODE_SET_PROTOTYPE_METHOD(s_ct, "computeAsymetricKeys", computeAsymetricKeys);
+        NODE_SET_PROTOTYPE_METHOD(s_ct, "computePublicKey", computePublicKey);
         
         target->Set(String::NewSymbol("RTMFP"), s_ct->GetFunction());
     }
@@ -109,6 +110,30 @@ class RTMFP: ObjectWrap
       sum = (sum >> 16) + (sum & 0xffff);
       sum += (sum >> 16);
       return scope.Close(Integer::New((uint16_t)~sum));
+    }
+    
+    /**
+     * Computes a public key for dh key exchange (public to JS API)
+     */
+    static Handle<Value> computePublicKey(const Arguments& args) {
+      HandleScope scope;
+      
+      char public_server_key[128];
+      /* Diffie Hellman Key exchange */
+      DH*	public_dh_key = DH_new();
+      public_dh_key->p = BN_new();
+      public_dh_key->g = BN_new();
+
+      BN_set_word(public_dh_key->g, 2);
+      BN_bin2bn(g_dh1024p, 128, public_dh_key->p);
+      DH_generate_key(public_dh_key); 
+            
+      //Fill the servers public key
+      BN_bn2bin(public_dh_key->pub_key, (uint8_t*)public_server_key);
+      
+      DH_free(public_dh_key);
+      
+      return scope.Close(Buffer::New(public_server_key, 128)->handle_);
     }
     
     /**
