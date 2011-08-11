@@ -49,6 +49,8 @@ except that ArcusNode command callbacks always get the NetConnection which calle
 
 At this moment, ArcusNode emits the following events:
 
+* start
+* stop
 * handshake
 * connect
 * disconnect
