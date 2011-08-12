@@ -1,6 +1,6 @@
 {
   "name": "ArcusNode", 
-  "version": "0.0.3", 
+  "version": "0.0.4", 
   "author": "arcusdev <arcus.node@gmail.com>", 
   "description": "A RTMFP Rendevouz Server For Peer Assisted Networking With Adobe Flash", 
   "main": "service", 

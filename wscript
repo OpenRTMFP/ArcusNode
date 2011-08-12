@@ -21,7 +21,7 @@ import os, sys
 
 srcdir = '.'
 blddir = './build'
-VERSION = '0.0.3'
+VERSION = '0.0.4'
  
 def set_options(opt):
   opt.tool_options('compiler_cxx')
@@ -41,5 +41,16 @@ def build(bld):
   rtmfp.target = 'rtmfp'
   rtmfp.source = 'src/rtmfp.cc'
   
+  keyExchange = bld.new_task_gen('cxx', 'shlib', 'node_addon')
+  
+  if sys.platform.startswith("cygwin"):
+    keyExchange.lib = 'crypto';
+  
+  keyExchange.cxxflags = ["-g", "-D_FILE_OFFSET_BITS=64", "-D_LARGEFILE_SOURCE", "-Wall", "-L/usr/lib", "-lssl"]
+  keyExchange.chmod = 0755
+  keyExchange.target = 'keyexchange'
+  keyExchange.source = 'src/keyexchange.cc'
+  
 def clean(opt):
+  if os.path.exists(blddir + '/default/keyexchange.node'): os.unlink(blddir + '/default/keyexchange.node')
   if os.path.exists(blddir + '/default/rtmfp.node'): os.unlink(blddir + '/default/rtmfp.node')
