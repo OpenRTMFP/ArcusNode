@@ -1,0 +1,8 @@
+### TODO
+
+* IPv6 support
+* SharedObjects
+* Applications (auto load from dir, natively supported)
+* force application option, to refuse connections to _root
+* Load balancing (RTMFP internally)
+* Child processes / Clusterize, self managing / self healing, redundant
