@@ -187,23 +187,33 @@ class RTMFP: ObjectWrap
           }
         }
       }
+      
+      Local<Array> result = Array::New();
+      result->Set(uint32_t(1), Integer::New(pos));
+      
       uint32_t value = ((a & 0x7F) << (s * 7));
       --s;
       if (s < 0) {
-        return scope.Close(Integer::New(value));
+        result->Set(uint32_t(0), Integer::New(value));
+        return scope.Close(result);
       }
       value += ((b & 0x7F) << (s * 7));
       --s;
       if (s < 0) {
-        return scope.Close(Integer::New(value));
+        result->Set(uint32_t(0), Integer::New(value));
+        return scope.Close(result);
       }
       value += ((c & 0x7F) << (s * 7));
       --s;
       if (s < 0) {
-        return scope.Close(Integer::New(value));
+        result->Set(uint32_t(0), Integer::New(value));
+        return scope.Close(result);
       }
       
-      return scope.Close(Integer::New(value + ((d & 0x7F) << (s * 7))));
+      
+      result->Set(uint32_t(0), Integer::New(value + ((d & 0x7F) << (s * 7))));
+      
+      return scope.Close(result);
     }
     
     /**
