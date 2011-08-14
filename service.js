@@ -66,5 +66,13 @@ util.print(
 var arc = new ArcusNode(settings);
 arc.run();
 
-util.print('ArcusNode RTMFP Service running at ' + arc.address().address + ((arc.address().port != '') ? ':' + arc.address().port : ''));
+process.on('SIGINT', function () {
+  util.print('\033[31mArcusNode shutting down...\033[0m\n');
+  arc.stop();
+});
+process.on('exit', function(){
+  util.print('\033[32mArcusNode stopped.\033[0m\n');
+});
+
+util.print('ArcusNode RTMFP Service running at ' + arc.address().address + ((arc.address().port != '') ? ':' + arc.address().port : '') + '\n');
     
