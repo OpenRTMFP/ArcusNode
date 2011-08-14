@@ -40,9 +40,9 @@ arcusService.run();
 </pre>
 
 ### Customization
-ArcusNode uses a mixture of Events, Hooks, and registered command callbacks. Events behave like known Node core events.
-The Hooks can control the protocol flow and directly influence the outcome. Commands are called by a connected client through its NetConnection#call
-and can be registered on ArcusNode. Commands on the server behave almost exactly the same as described in the Flash Documentation,
+ArcusNode uses a mixture of Events and registered command callbacks. Events behave like known Node core events.
+Commands are called by a connected client through its NetConnection#call and can be registered on ArcusNode. 
+Commands on the server behave almost exactly the same as described in the Flash Documentation,
 except that ArcusNode command callbacks always get the NetConnection which called the command as first argument, then the arguments from the Client. 
 
 ### Events
@@ -88,9 +88,6 @@ arcusService.onCommand('sayWhat', function(nc, obj){
   return { what: obj.name + ' rocks!' };
 });
 </pre>
-
-### Hooks
-[todo]
 
 ### ArcusNode Settings
 

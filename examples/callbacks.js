@@ -24,23 +24,6 @@ arc.on('disconnect', function(){
   console.log('EVENT disconnect works.');
 });
 
-//Use hooks
-arc.hook('handshake', function(){
-  console.log('HOOK handshake works.');
-});
-
-arc.hook('connect', function(){
-  console.log('HOOK connect works.');
-});
-
-arc.hook('address', function(){
-  console.log('HOOK address works.');
-});
-
-arc.hook('command', function(){
-  console.log('HOOK commands works.');
-});
-
 //Add a command and handle it
 arc.command('sayWhat', function(){
   console.log('Got command sayWhat: ', Array.prototype.slice.call(arguments, 1));
