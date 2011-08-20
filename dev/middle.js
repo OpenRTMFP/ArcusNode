@@ -198,7 +198,7 @@ var clientSocket = dgram.createSocket('udp4', function(buffer, remoteInfo){
     console.log('Client to FMS (unhandled): ', pkt.toString());
     rtmfp.encryptPacket(pkt, serverConnection.__p.encryptKey);
     rtmfp.encodePacket(pkt, serverConnection.__p.clientConnectionId);
-    send(clientSocket, pkt, serverConnection.addresses[0]);
+    send(clientSocket, pkt, FMS);
     return;
   }
   
