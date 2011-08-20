@@ -1,17 +1,26 @@
 # ArcusNode
-#### A RTMFP Rendevouz Server For Peer Assisted Networking With Adobe Flash on nodejs
+#### A RTMFP Rendevouz Server For Peer Assisted Networking With Adobe Flash on NodeJS
+ArcusNode aims to assist P2P networking with ease of extendability due to Javascript glue with NodeJS.
+ArcusNode is a standalone RTMFP implementation.
+We want to thank [Cumulus](http://github.com/OpenRTMFP/Cumulus), a standalone C++ implementation of the _RTMFP Protocol_ and much more.
 
-Author: arcusdev [arcus.node@gmail.com]
+Author: arcusdev [arcus.node@gmail.com]  
 License: [GPL](http://www.gnu.org/licenses/) 
 
-## Description
-ArcusNode is an offspring of [Cumulus](http://github.com/OpenRTMFP/Cumulus), a standalone C++ implementation of the _RTMFP Protocol_ and much more. ArcusNode aims to assist P2P networking with ease of extendability due to Javascript glue with nodejs.
+## Status
+ArcusNode is still under heavy development and much work remains to be done. 
+It covers the following features already:
+
+* P2P Rendezvouz service
+* NetGroups
+* Remote Methods / Commands
+* Authentication
+* Plugins
+
 
 ## Build & Installation
-To use ArcusNode as a service, get it from [github](http://github.com/OpenRTMFP/ArcusNode) and run:
+ArcusNode runs on Node v0.5.2 and higher. To use ArcusNode as a service, get it from [github](http://github.com/OpenRTMFP/ArcusNode) and run:
 <pre>
-$> git submodule init
-$> git submodule update
 $> node-waf configure build
 $> node service.js
 </pre>
@@ -24,7 +33,7 @@ This is free software, and you are welcome to redistribute it under certain cond
 (For usage help type "node service.js -h")
 ArcusNode RTMFP Service running at 0.0.0.0:1935
 </pre>
-1935 is the default port for RTMFP communication.
+1935 is the default port for RTMFP communication and you should now be able to connect to the server, create groups and get peers connected.
 
 #### Cygwin
 If you run into problems building node on Cygwin, checkout _https://github.com/joyent/node/wiki/Building-node.js-on-Cygwin-(Windows)_.
@@ -64,7 +73,7 @@ var ArcusNode = require('./lib/arcus_node.js');
 var arcusService = new ArcusNode();
 
 arcusService.on('connect', function(nc, obj){
-  console.log('Received a connection request for Connection ' + nc.id() + ' with the properties', obj);
+  console.log('Received a connection request for Connection ' + nc.id + ' with the properties', obj);
 });
 
 arcusService.run();
@@ -114,7 +123,7 @@ The ArcusNode constructor takes a settings object with the following attributes:
   Default: 'warn'
   Can be one of ['fatal', 'error', 'warn', 'info', 'debug'].
   
-logFile:
+.logFile:
   Type: String, path
   Default: ''
   If a path for a log file is specified, all logging will be written to that file.
@@ -134,13 +143,18 @@ logFile:
   Default: 360000
   The timeout for a NetGroup. The group is dropped afer there was no interaction for that amount of time.
 
-.P2SKeepalive
+.serverKeepalive
   Type: Integer, milliseconds
   Default: 60000
   The timeout before the server sends a keepalive command to the client.
   Should be less then connectionTimeout.
 
-.maxP2SKeepalive
+.clientKeepalive
+  Type: Integer, milliseconds
+  Default: 60000
+  Will tell the client in what interval it should send keepalive messages
+
+.maxKeepalives
   Type: Integer
   Default: 3
   How often to max keepalive the connection before dropping it.
