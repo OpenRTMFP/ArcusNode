@@ -7,6 +7,10 @@ We want to thank [Cumulus](http://github.com/OpenRTMFP/Cumulus), a standalone C+
 Author: arcusdev [arcus.node@gmail.com]  
 License: [GPL](http://www.gnu.org/licenses/) 
 
+## Issues
+If you have an **issue** with ArcusNode, please use the Github issue tracker!
+
+
 ## Status
 ArcusNode is still under heavy development and much work remains to be done. 
 It covers the following features already:
