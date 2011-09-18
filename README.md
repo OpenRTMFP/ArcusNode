@@ -23,7 +23,7 @@ It covers the following features already:
 
 
 ## Build & Installation
-ArcusNode runs on Node v0.5.2 and higher. To use ArcusNode as a service, get it from [github](http://github.com/OpenRTMFP/ArcusNode) and run:
+ArcusNode runs on Node v0.5.5 and higher. To use ArcusNode as a service, get it from [github](http://github.com/OpenRTMFP/ArcusNode) and run:
 <pre>
 $> node-waf configure build
 $> node service.js
