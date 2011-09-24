@@ -107,11 +107,6 @@ arcusService.onCommand('sayWhat', function(nc, obj){
 The ArcusNode constructor takes a settings object with the following attributes:
 
 <pre>
-.auth 
-  Type: Boolean 
-  Default: false 
-  If set to true, only authenticated NetConnections are allowed, others get disconnected.
-  
 .port
   Type: Integer
   Default: 1935
