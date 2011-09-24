@@ -29,6 +29,7 @@ package
 		//Connections
     private var connectionWindow:Window;
     private var serverURI:InputText;
+    private var connectionArgs:InputText;
     private var connectionsList:List;
     private var connections:Array = new Array();
     
@@ -76,11 +77,14 @@ package
       var uriLabel:Label = new Label(connectionWindow, 5, 5, 'Server Address');
       serverURI = new InputText(connectionWindow, 95, 5, 'rtmfp://');
       serverURI.width = 150
-      var connect:PushButton = new PushButton(connectionWindow, 5, 25, 'Create New Connection');
+      var argsLabel:Label = new Label(connectionWindow, 5, 25, 'Arguments');
+      connectionArgs = new InputText(connectionWindow, 95, 25, '');
+      connectionArgs.width = 150
+      var connect:PushButton = new PushButton(connectionWindow, 5, 50, 'Create New Connection');
       connect.width = 240;
       connect.addEventListener(MouseEvent.CLICK, addConnection);
-      connectionsList = new List(connectionWindow, 5, 50);
-      connectionsList.setSize(240, 300);
+      connectionsList = new List(connectionWindow, 5, 75);
+      connectionsList.setSize(240, 275);
       var closeConnectionButton:PushButton = new PushButton(connectionWindow, 5, 355, 'Close selected Connection');
       closeConnectionButton.width = 240;
       closeConnectionButton.addEventListener(MouseEvent.CLICK, function():void
@@ -112,7 +116,10 @@ package
     {
       var nc:Connection = new Connection();
       nc.addEventListener(NetStatusEvent.NET_STATUS, connectionStatusListener);
-      nc.connect(serverURI.text);
+	  
+	  var args:Array = connectionArgs.text.split(',');
+	  
+	nc.connect.apply(this, [serverURI.text].concat(args));
       nc.label = nc.num + ' to ' + serverURI.text;
       connections.push(nc);
       connectionsList.addItem(nc);
