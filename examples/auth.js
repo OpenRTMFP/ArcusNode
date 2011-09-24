@@ -15,14 +15,19 @@ arc.on('connect', function(nc, options, username, password){
   
   //Make sure the username and password are given
   if(typeof(username) == 'undefined' || typeof(password) == 'undefined'){
+    //If not, let the connection fail -> NetConnection.Connect.Failed
     nc.fail();
     return;
   }
   
+  //Check the credentials
   if(users[username] === password){
+    //Accept the connection if credentials are correct -> NetConnection.Connect.Success
+    //The specified argument is a description which can be accessed in the client at NetStatusEvent|info.description
     nc.accept('Authentication successfull.');
   } else {
-    nc.reject('message');
+    //Reject the connection with the given message -> NetConnection.Connect.Rejected 
+    nc.reject('Wrong credentials');
   }
   
 });
