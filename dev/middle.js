@@ -75,7 +75,7 @@ var serverSocket = dgram.createSocket('udp4', function(buffer, remoteInfo){
     console.log('FMS to Client (unhandled): ', pkt.toString());
     rtmfp.encryptPacket(pkt, clientConnection.__p.encryptKey);
     rtmfp.encodePacket(pkt, clientConnection.__p.clientConnectionId);
-    send(clientSocket, pkt, clientConnection.addresses[0]);
+    send(clientSocket, pkt, clientConnection.endpoints[0]);
     return;
   }
   for(k in msgs){
@@ -83,8 +83,8 @@ var serverSocket = dgram.createSocket('udp4', function(buffer, remoteInfo){
     switch(msg.type){
       // FORWARD
       case RTMFP.FORWARD_REQUEST:
-        for(k in msg.addresses){
-          console.log('FORWARD ADDRESS: ', msg.addresses[k]);
+        for(k in msg.endpoints){
+          console.log('FORWARD ADDRESS: ', msg.endpoints[k]);
         }
         break;
         
@@ -122,7 +122,7 @@ var serverSocket = dgram.createSocket('udp4', function(buffer, remoteInfo){
         console.log('FMS to Client: ', pkt.toString());
         rtmfp.encryptPacket(pkt, clientConnection.__p.encryptKey);
         rtmfp.encodePacket(pkt, clientConnection.__p.clientConnectionId);
-        send(clientSocket, pkt, clientConnection.addresses[0]);
+        send(clientSocket, pkt, clientConnection.endpoints[0]);
         break;
     }
   }
@@ -238,7 +238,7 @@ var clientSocket = dgram.createSocket('udp4', function(buffer, remoteInfo){
         //This will be used by the client to encode it to a packet so the server can lookup connections
         message.connectionId = clientConnection.id;
         
-        clientConnection.addresses.push(remoteInfo);
+        clientConnection.endpoints.push(remoteInfo);
 
         //Do key exchange
         clientConnection.computeSharedSecret(message.publicKey);
@@ -252,7 +252,7 @@ var clientSocket = dgram.createSocket('udp4', function(buffer, remoteInfo){
         rtmfp.writePacket(responsePacket, message);
         rtmfp.encryptPacket(responsePacket, RTMFP.SYMETRIC_KEY);
         rtmfp.encodePacket(responsePacket, clientConnection.__p.clientConnectionId);
-        send(clientSocket, responsePacket, clientConnection.addresses[0]);
+        send(clientSocket, responsePacket, clientConnection.endpoints[0]);
         
         console.log('Client connection established, ready to loop through.');
         break;
