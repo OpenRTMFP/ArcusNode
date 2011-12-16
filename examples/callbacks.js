@@ -27,7 +27,7 @@ arc.on('disconnect', function(){
 //Add a command and handle it
 arc.command('sayWhat', function(){
   console.log('Got command sayWhat: ', Array.prototype.slice.call(arguments, 1));
-  return arguments[1].name + ' rocks!';
+  return { what: arguments[1].name + ' rocks!' };
 });
 
 //Start the server
