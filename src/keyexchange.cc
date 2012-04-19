@@ -56,8 +56,8 @@ class KeyExchange: ObjectWrap
   public:
     
     static Persistent<FunctionTemplate> s_ct;
-    static DH* dh;
-    
+    DH* dh;
+
     /**
      * Node module initialization and method exposure
      */     
@@ -79,13 +79,16 @@ class KeyExchange: ObjectWrap
         
         target->Set(String::NewSymbol("KeyExchange"), s_ct->GetFunction());
     }
-    
-    KeyExchange()
+
+    KeyExchange() : ObjectWrap()
     {
+      dh = NULL;
     }
 
-    ~KeyExchange(){}
-    
+    ~KeyExchange(){
+      if (dh) DH_free(dh);
+    }
+
     /**
      * Creates a new KeyExchange instance as a JavaScript Object
      */     
@@ -103,24 +106,25 @@ class KeyExchange: ObjectWrap
      * @return {Array} [privateKey, publicKey]
      */
     static Handle<Value> generateKeyPair(const Arguments& args) {
+      KeyExchange *ke = ObjectWrap::Unwrap<KeyExchange>(args.This());
       HandleScope scope;
       
       char private_key[128];
       char public_key[128];
       
       // Create DH keypair
-      KeyExchange::dh = DH_new();
-      KeyExchange::dh->p = BN_new();
-      KeyExchange::dh->g = BN_new();
+      ke->dh = DH_new();
+      ke->dh->p = BN_new();
+      ke->dh->g = BN_new();
 
-      BN_set_word(KeyExchange::dh->g, 2);
-      BN_bin2bn(g_dh1024p, 128, KeyExchange::dh->p);
-      DH_generate_key(KeyExchange::dh); 
-            
+      BN_set_word(ke->dh->g, 2);
+      BN_bin2bn(g_dh1024p, 128, ke->dh->p);
+      DH_generate_key(ke->dh);
+
       //Fill the servers public key
-      BN_bn2bin(KeyExchange::dh->pub_key, (uint8_t*)public_key);
-      BN_bn2bin(KeyExchange::dh->priv_key, (uint8_t*)private_key);
-      
+      BN_bn2bin(ke->dh->pub_key, (uint8_t*)public_key);
+      BN_bn2bin(ke->dh->priv_key, (uint8_t*)private_key);
+
       Local<Array> keys = Array::New();
       
       keys->Set(uint32_t(0), Buffer::New(private_key, 128)->handle_);
@@ -133,6 +137,7 @@ class KeyExchange: ObjectWrap
      * Computes the shared secret from a public key
      */
     static Handle<Value> computeSharedSecret(const Arguments& args) {
+      KeyExchange *ke = ObjectWrap::Unwrap<KeyExchange>(args.This());
       HandleScope scope;
       
       Local<Object> far_key_obj = args[0]->ToObject();
@@ -140,8 +145,8 @@ class KeyExchange: ObjectWrap
       if (args.Length() < 1 || !Buffer::HasInstance(far_key_obj)) {
         return ThrowException(Exception::TypeError(String::New("Bad argument")));
       }
-      
-      if(DH_size(KeyExchange::dh) <= 0){
+
+      if(DH_size(ke->dh) <= 0){
         return ThrowException(Exception::TypeError(String::New("DH empty. Generate Keypair first.")));
       }
       
@@ -150,11 +155,10 @@ class KeyExchange: ObjectWrap
       
       char shared_secret[128];
       BIGNUM *bn_far_key = BN_bin2bn((const uint8_t*)far_key, far_key_size, NULL);
-      DH_compute_key((unsigned char*)shared_secret, bn_far_key, KeyExchange::dh);
-        
+      DH_compute_key((unsigned char*)shared_secret, bn_far_key, ke->dh);
+
       BN_free(bn_far_key);
-      DH_free(KeyExchange::dh);
-      
+
       return scope.Close(Buffer::New(shared_secret, 128)->handle_);
     }
     
@@ -206,7 +210,6 @@ class KeyExchange: ObjectWrap
 };
 
 Persistent<FunctionTemplate> KeyExchange::s_ct;
-DH* KeyExchange::dh;
 
 //Node module exposure
 extern "C" {
