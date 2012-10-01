@@ -141,8 +141,12 @@ class KeyExchange: ObjectWrap
         return ThrowException(Exception::TypeError(String::New("Bad argument")));
       }
       
-      if(DH_size(KeyExchange::dh) <= 0){
-        return ThrowException(Exception::TypeError(String::New("DH empty. Generate Keypair first.")));
+      try {
+        if(DH_size(KeyExchange::dh) <= 0){
+          return ThrowException(Exception::TypeError(String::New("DH empty. Generate Keypair first.")));
+        }
+      } catch(...){
+        return ThrowException(Exception::TypeError(String::New("Could not check DH Keypair.")));
       }
       
       char *far_key = Buffer::Data(far_key_obj);
