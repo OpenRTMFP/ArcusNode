@@ -3,3 +3,4 @@ build
 *.log
 *.sublime-project
 *.sublime-workspace
+._*
