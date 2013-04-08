@@ -29,7 +29,7 @@
     "mail" : "arcus.node@gmail.com", 
     "web" : "https://github.com/OpenRTMFP/ArcusNode/issues"
   },
-  "engines" : { "node" : ">=0.8.0", "npm" : "1" },
+  "engines" : { "node" : "~0.10.0", "npm" : "1" },
   "licenses": [{
     "type": "GPL", 
     "url": "http://www.gnu.org/licenses/"
