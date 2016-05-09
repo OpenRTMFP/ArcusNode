@@ -1,3 +1,6 @@
+If anyone is still interested in using this project, I am considering a major open source overhaul.
+Please poke me at arcus.node@gmail.com if you are interested...
+
 # ArcusNode
 #### A RTMFP Rendevouz Server For Peer Assisted Networking With Adobe Flash on NodeJS
 ArcusNode aims to assist P2P networking with ease of extendability due to Javascript glue with NodeJS.
